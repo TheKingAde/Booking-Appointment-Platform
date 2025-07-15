@@ -5,7 +5,8 @@
 {% block extra_css %}
 <style>
     .dashboard-header {
-        background: linear-gradient(135deg, var(--primary-green), var(--light-green));
+        background: linear-gradient(135deg, var(--card-black), var(--light-gray));
+        border: 2px solid var(--primary-green);
         color: white;
         padding: 2rem;
         border-radius: 20px;
@@ -57,7 +58,8 @@
     }
 
     .stat-card {
-        background: white;
+        background: var(--card-black);
+        border: 1px solid var(--medium-gray);
         border-radius: 15px;
         padding: 1.5rem;
         box-shadow: var(--shadow);
@@ -243,7 +245,8 @@
     }
 
     .booking-item {
-        background: var(--light-gray);
+        background: var(--card-black);
+        border: 1px solid var(--medium-gray);
         border-radius: 15px;
         padding: 1.5rem;
         margin-bottom: 1rem;
@@ -279,12 +282,12 @@
     }
 
     .booking-status.confirmed {
-        background: #d4edda;
+        background: rgba(0, 255, 136, 0.2);
         color: var(--primary-green);
     }
 
     .booking-status.cancelled {
-        background: #f8d7da;
+        background: rgba(255, 68, 68, 0.2);
         color: var(--accent-red);
     }
 
@@ -441,7 +444,7 @@
                 <i class="fas fa-calendar-check"></i>
             </div>
             <div>
-                <div class="stat-value" id="todayBookings">{{ bookings|selectattr('appointment_date', 'today')|list|length }}</div>
+                <div class="stat-value" id="todayBookings">{{ today_bookings_count }}</div>
                 <div class="stat-label">Today's Bookings</div>
             </div>
         </div>
