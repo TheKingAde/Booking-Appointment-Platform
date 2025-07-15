@@ -1,72 +1,81 @@
-# Booking & Appointment Platform Prompt for Cursor
+# Booking & Appointment Platform for Freelancer Portfolio
 
 ## Project Overview
 
-Build a **Booking & Appointment Platform** web application using **Flask** and **JavaScript**.
+Build a **Booking & Appointment Platform** web application using **Flask** and **JavaScript** designed to impress clients and showcase your fullstack skills.
 
 The platform should allow users to:
 
-- View available time slots for services (e.g., salons, clinics, consultants)
-- Book appointments easily and receive booking confirmations via email
-- Admin users can view a calendar of bookings and reschedule appointments
+- View available time slots for various services (salons, clinics, consultants, etc.)
+- Book appointments easily with real-time availability checks
+- Admin users can view and manage bookings with a calendar interface, including rescheduling
 
 ---
 
 ## Frontend Requirements
 
-- Theme: **Green and white** as primary colors, with a touch of **red** for highlights or alerts
-- Include **cool CSS animations** for buttons, transitions, and interactive elements
-- Responsive design that works well on desktop and mobile
-- Smooth user experience with loading indicators and animated feedback
+- Clean, modern UI with a **green and white** color scheme accented by subtle **red** highlights
+- Include smooth **CSS animations** for buttons, transitions, and interactive elements
+- Responsive design optimized for both desktop and mobile users
+- User-friendly experience with clear feedback and loading animations
 
 ---
 
 ## Backend Requirements
 
-- Use **Flask** as the backend framework
-- Manage appointments and user data with a simple database (SQLite or any preferred)
-- Provide REST API endpoints for:
+- Built with **Flask** backend for API and server-side logic
+- Use a simple database (SQLite or preferred) to store bookings and user data
+- Implement REST API endpoints for:
   - Fetching available time slots
-  - Creating new bookings
-  - Viewing and rescheduling appointments (admin)
-- Implement basic authentication for admin users
+  - Creating and managing bookings
+  - Admin appointment rescheduling
+- Basic authentication for admin dashboard access
 
 ---
 
-## Email Notifications
+## Notification System
 
-- Use **Google Gmail API** to send booking confirmation emails to users
-- Implement OAuth 2.0 for secure Gmail access (request `gmail.send` scope)
-- Emails should confirm appointment details clearly
-- Gmail API usage is free with generous quotas, but requires handling user consent securely
+- Instead of email, send booking confirmation and updates as messages to the freelancer's **Telegram** account using the Telegram Bot API
+- Use these Telegram API details for message sending:
+
+TG_API_URL = "https://api.telegram.org" // Base URL for Telegram API
+botTkn = "7969763015:AAEliO2m1l9Yn7dDY8j_PKvG3_4yHlXbuZY" // Telegram bot token
+chatID = "6126141848" // Chat ID for Telegram chat
+
+yaml
+Copy
+Edit
+
+- Notifications should include all relevant appointment details and booking status
 
 ---
 
 ## Additional Notes
 
-- Modular and maintainable code structure for easy customization per client
-- Clear user instructions and error handling on frontend and backend
-- Admin dashboard with calendar view for managing appointments visually
+- Write clean, modular code that is easy to customize for different clients
+- Provide clear validation and error handling on both frontend and backend
+- Admin dashboard with a calendar view to visualize and manage appointments
 
 ---
 
 ## Summary
 
-Create a modern, user-friendly booking platform with:
+Deliver a professional booking platform project demonstrating:
 
-- Green/white/red themed animated frontend  
-- Flask backend with secure APIs and Gmail API email notifications  
-- Easy admin management of appointments  
+- Modern **green/white/red themed** animated frontend  
+- Flask backend with secure REST APIs  
+- Real-time booking management and admin rescheduling  
+- Telegram bot integration for instant booking notifications  
 
-This project demonstrates skills in **fullstack web development, API integration, OAuth authentication, and UX/UI design**.
+This project will highlight your fullstack development, API integration, and UX/UI design skills — perfect for your freelancer portfolio.
 
 ---
 
-If needed, please help generate code snippets for:
+If desired, I can help with starter code snippets for:
 
-- Google Gmail API OAuth flow and email sending in Flask  
-- Animated CSS components for buttons and calendar UI  
-- REST API design for bookings and appointment management
+- Telegram bot message sending integration in Flask  
+- Animated CSS UI components  
+- Backend API design for bookings and admin  
 
 ---
 
