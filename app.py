@@ -98,7 +98,14 @@ def admin_login():
 @admin_required
 def admin_dashboard():
     bookings = Booking.query.order_by(Booking.appointment_date.desc()).all()
-    return render_template('admin_dashboard.html', bookings=bookings)
+    
+    # Calculate today's bookings
+    today = datetime.now().date()
+    today_bookings = [booking for booking in bookings if booking.appointment_date.date() == today]
+    
+    return render_template('admin_dashboard.html', 
+                         bookings=bookings, 
+                         today_bookings_count=len(today_bookings))
 
 @app.route('/admin/logout')
 def admin_logout():
