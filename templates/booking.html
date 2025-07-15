@@ -19,7 +19,11 @@
         font-size: 3rem;
         margin-bottom: 1rem;
         color: var(--primary-green);
-        animation: slideUp 0.8s ease-out;
+        animation: bounce-in 1s ease-out;
+        background: linear-gradient(135deg, var(--primary-green), var(--light-green));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
     }
 
     .booking-header p {
@@ -27,7 +31,7 @@
         color: var(--dark-gray);
         max-width: 600px;
         margin: 0 auto;
-        animation: slideUp 0.8s ease-out 0.2s both;
+        animation: slide-in-left 0.8s ease-out 0.3s both;
     }
 
     .booking-steps {
@@ -78,11 +82,24 @@
         padding: 2rem;
         box-shadow: var(--shadow);
         margin-bottom: 2rem;
+        animation: scale-in 0.8s ease-out;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .booking-form::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, var(--primary-green), var(--light-green));
     }
 
     .form-section {
         display: none;
-        animation: fadeIn 0.5s ease-out;
+        animation: slide-in-right 0.5s ease-out;
     }
 
     .form-section.active {
