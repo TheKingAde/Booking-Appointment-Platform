@@ -1,0 +1,317 @@
+{% extends "base.html" %}
+
+{% block title %}Our Services - BookingPro{% endblock %}
+
+{% block extra_css %}
+<style>
+    .services-header {
+        text-align: center;
+        margin-bottom: 3rem;
+        padding: 2rem 0;
+    }
+
+    .services-header h1 {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        color: var(--primary-green);
+        animation: slideUp 0.8s ease-out;
+    }
+
+    .services-header p {
+        font-size: 1.2rem;
+        color: var(--dark-gray);
+        max-width: 600px;
+        margin: 0 auto;
+        animation: slideUp 0.8s ease-out 0.2s both;
+    }
+
+    .services-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 2rem;
+        margin-bottom: 3rem;
+    }
+
+    .service-card {
+        background: white;
+        border-radius: 20px;
+        padding: 2rem;
+        box-shadow: var(--shadow);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        cursor: pointer;
+    }
+
+    .service-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, var(--primary-green), var(--light-green));
+    }
+
+    .service-card:hover {
+        transform: translateY(-10px) scale(1.02);
+        box-shadow: var(--shadow-hover);
+    }
+
+    .service-icon {
+        font-size: 3rem;
+        color: var(--primary-green);
+        margin-bottom: 1rem;
+        display: block;
+        animation: pulse 2s infinite;
+    }
+
+    .service-card h3 {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+        color: var(--dark-green);
+    }
+
+    .service-card p {
+        color: var(--dark-gray);
+        line-height: 1.6;
+        margin-bottom: 1.5rem;
+    }
+
+    .service-details {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+
+    .service-price {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--primary-green);
+    }
+
+    .service-duration {
+        color: var(--dark-gray);
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .service-card .btn {
+        width: 100%;
+        margin-top: 1rem;
+        opacity: 0;
+        transform: translateY(20px);
+        transition: all 0.3s ease;
+    }
+
+    .service-card:hover .btn {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .cta-section {
+        background: linear-gradient(135deg, var(--primary-green) 0%, var(--light-green) 100%);
+        color: white;
+        text-align: center;
+        padding: 4rem 2rem;
+        margin: 3rem -2rem 0 -2rem;
+        border-radius: 20px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .cta-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100" fill="white" opacity="0.1"><polygon points="0,0 1000,100 0,100"/></svg>');
+        background-size: cover;
+        background-position: top;
+    }
+
+    .cta-content {
+        position: relative;
+        z-index: 1;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .cta-section h2 {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .cta-section p {
+        font-size: 1.1rem;
+        margin-bottom: 2rem;
+        opacity: 0.9;
+    }
+
+    /* Service Modal */
+    .service-modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 9999;
+        animation: fadeIn 0.3s ease-out;
+    }
+
+    .modal-content {
+        background: white;
+        border-radius: 20px;
+        padding: 2rem;
+        max-width: 500px;
+        margin: 5% auto;
+        position: relative;
+        animation: slideUp 0.3s ease-out;
+    }
+
+    .modal-close {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: var(--dark-gray);
+        transition: color 0.3s ease;
+    }
+
+    .modal-close:hover {
+        color: var(--accent-red);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .services-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .services-header h1 {
+            font-size: 2.5rem;
+        }
+        
+        .service-card .btn {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="services-header">
+    <h1>Our Premium Services</h1>
+    <p>Discover our range of professional services designed to meet your needs. Book your appointment today and experience excellence.</p>
+</div>
+
+<div class="services-grid">
+    {% for service in services %}
+    <div class="service-card" data-service-id="{{ service.id }}">
+        <i class="fas fa-cut service-icon"></i>
+        <h3>{{ service.name }}</h3>
+        <p>{{ service.description }}</p>
+        
+        <div class="service-details">
+            <div class="service-price">${{ "%.2f"|format(service.price) }}</div>
+            <div class="service-duration">
+                <i class="fas fa-clock"></i>
+                {{ service.duration }} minutes
+            </div>
+        </div>
+        
+        <a href="{{ url_for('booking') }}?service={{ service.id }}" class="btn btn-primary">
+            <i class="fas fa-calendar-plus"></i>
+            Book Now
+        </a>
+    </div>
+    {% endfor %}
+</div>
+
+<div class="cta-section">
+    <div class="cta-content">
+        <h2>Ready to Book Your Service?</h2>
+        <p>Choose from our premium services and schedule your appointment at a time that works best for you.</p>
+        
+        <a href="{{ url_for('booking') }}" class="btn btn-secondary">
+            <i class="fas fa-rocket"></i>
+            Start Booking Process
+        </a>
+    </div>
+</div>
+
+<!-- Service Modal -->
+<div class="service-modal" id="serviceModal">
+    <div class="modal-content">
+        <button class="modal-close" onclick="closeModal()">&times;</button>
+        <div id="modalContent">
+            <!-- Content will be loaded here -->
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Service card interactions
+    document.addEventListener('DOMContentLoaded', function() {
+        const serviceCards = document.querySelectorAll('.service-card');
+        
+        serviceCards.forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.querySelector('.service-icon').style.transform = 'scale(1.1) rotate(5deg)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.querySelector('.service-icon').style.transform = 'scale(1) rotate(0deg)';
+            });
+        });
+    });
+
+    // Modal functions
+    function openModal(serviceId) {
+        const modal = document.getElementById('serviceModal');
+        modal.style.display = 'block';
+        
+        // Load service details (you can expand this to fetch from API)
+        const modalContent = document.getElementById('modalContent');
+        modalContent.innerHTML = `
+            <h3>Service Details</h3>
+            <p>Loading service information...</p>
+        `;
+    }
+
+    function closeModal() {
+        const modal = document.getElementById('serviceModal');
+        modal.style.display = 'none';
+    }
+
+    // Close modal when clicking outside
+    window.onclick = function(event) {
+        const modal = document.getElementById('serviceModal');
+        if (event.target === modal) {
+            closeModal();
+        }
+    }
+
+    // Add staggered animation to service cards
+    document.addEventListener('DOMContentLoaded', function() {
+        const serviceCards = document.querySelectorAll('.service-card');
+        serviceCards.forEach((card, index) => {
+            card.style.animationDelay = `${index * 0.1}s`;
+            card.classList.add('fade-in');
+        });
+    });
+</script>
+{% endblock %}
