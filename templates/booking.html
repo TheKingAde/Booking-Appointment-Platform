@@ -1,0 +1,794 @@
+{% extends "base.html" %}
+
+{% block title %}Book Appointment - BookingPro{% endblock %}
+
+{% block extra_css %}
+<style>
+    .booking-container {
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+
+    .booking-header {
+        text-align: center;
+        margin-bottom: 3rem;
+        padding: 2rem 0;
+    }
+
+    .booking-header h1 {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        color: var(--primary-green);
+        animation: slideUp 0.8s ease-out;
+    }
+
+    .booking-header p {
+        font-size: 1.2rem;
+        color: var(--dark-gray);
+        max-width: 600px;
+        margin: 0 auto;
+        animation: slideUp 0.8s ease-out 0.2s both;
+    }
+
+    .booking-steps {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 3rem;
+        gap: 2rem;
+    }
+
+    .step {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 1rem 1.5rem;
+        background: var(--light-gray);
+        border-radius: 50px;
+        transition: all 0.3s ease;
+    }
+
+    .step.active {
+        background: var(--primary-green);
+        color: white;
+        transform: scale(1.05);
+    }
+
+    .step-number {
+        background: var(--primary-green);
+        color: white;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 0.9rem;
+    }
+
+    .step.active .step-number {
+        background: white;
+        color: var(--primary-green);
+    }
+
+    .booking-form {
+        background: white;
+        border-radius: 20px;
+        padding: 2rem;
+        box-shadow: var(--shadow);
+        margin-bottom: 2rem;
+    }
+
+    .form-section {
+        display: none;
+        animation: fadeIn 0.5s ease-out;
+    }
+
+    .form-section.active {
+        display: block;
+    }
+
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+    }
+
+    .service-selection {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .service-option {
+        border: 2px solid var(--medium-gray);
+        border-radius: 15px;
+        padding: 1.5rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .service-option:hover {
+        border-color: var(--primary-green);
+        transform: translateY(-3px);
+        box-shadow: var(--shadow);
+    }
+
+    .service-option.selected {
+        border-color: var(--primary-green);
+        background: rgba(44, 139, 44, 0.1);
+    }
+
+    .service-option h4 {
+        margin-bottom: 0.5rem;
+        color: var(--dark-green);
+    }
+
+    .service-option p {
+        color: var(--dark-gray);
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+    }
+
+    .service-price {
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: var(--primary-green);
+    }
+
+    .calendar-container {
+        background: white;
+        border-radius: 15px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .calendar-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+
+    .calendar-nav {
+        background: var(--primary-green);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        cursor: pointer;
+        font-size: 1.2rem;
+        transition: all 0.3s ease;
+    }
+
+    .calendar-nav:hover {
+        background: var(--light-green);
+        transform: scale(1.1);
+    }
+
+    .calendar-month {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--primary-green);
+    }
+
+    .calendar-grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 0.5rem;
+    }
+
+    .calendar-day {
+        aspect-ratio: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        border-radius: 10px;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .calendar-day:hover {
+        background: var(--light-gray);
+        transform: scale(1.1);
+    }
+
+    .calendar-day.selected {
+        background: var(--primary-green);
+        color: white;
+        transform: scale(1.05);
+    }
+
+    .calendar-day.disabled {
+        color: var(--dark-gray);
+        cursor: not-allowed;
+        opacity: 0.3;
+    }
+
+    .calendar-day.today {
+        background: var(--accent-red);
+        color: white;
+    }
+
+    .time-slots {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .time-slot {
+        padding: 1rem;
+        border: 2px solid var(--medium-gray);
+        border-radius: 15px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .time-slot:hover {
+        border-color: var(--primary-green);
+        transform: translateY(-3px);
+        box-shadow: var(--shadow);
+    }
+
+    .time-slot.selected {
+        border-color: var(--primary-green);
+        background: var(--primary-green);
+        color: white;
+    }
+
+    .time-slot.unavailable {
+        background: var(--medium-gray);
+        color: var(--dark-gray);
+        cursor: not-allowed;
+        opacity: 0.5;
+    }
+
+    .form-navigation {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 2rem;
+    }
+
+    .booking-summary {
+        background: var(--light-gray);
+        border-radius: 15px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .summary-item {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 1rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid var(--medium-gray);
+    }
+
+    .summary-item:last-child {
+        border-bottom: none;
+        font-weight: bold;
+        font-size: 1.2rem;
+        color: var(--primary-green);
+    }
+
+    .success-message {
+        text-align: center;
+        padding: 3rem;
+        background: var(--light-gray);
+        border-radius: 20px;
+        margin: 2rem 0;
+    }
+
+    .success-message .checkmark {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: var(--primary-green);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        margin: 0 auto 1rem;
+        animation: bounce 0.6s ease-out;
+    }
+
+    @keyframes bounce {
+        0%, 20%, 50%, 80%, 100% {
+            transform: translateY(0);
+        }
+        40% {
+            transform: translateY(-10px);
+        }
+        60% {
+            transform: translateY(-5px);
+        }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .booking-steps {
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .form-row {
+            grid-template-columns: 1fr;
+        }
+        
+        .service-selection {
+            grid-template-columns: 1fr;
+        }
+        
+        .time-slots {
+            grid-template-columns: repeat(3, 1fr);
+        }
+        
+        .calendar-grid {
+            font-size: 0.9rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="booking-container">
+    <div class="booking-header">
+        <h1>Book Your Appointment</h1>
+        <p>Select your preferred service, date, and time to schedule your appointment with us.</p>
+    </div>
+
+    <!-- Booking Steps -->
+    <div class="booking-steps">
+        <div class="step active" id="step1">
+            <div class="step-number">1</div>
+            <span>Select Service</span>
+        </div>
+        <div class="step" id="step2">
+            <div class="step-number">2</div>
+            <span>Choose Date</span>
+        </div>
+        <div class="step" id="step3">
+            <div class="step-number">3</div>
+            <span>Pick Time</span>
+        </div>
+        <div class="step" id="step4">
+            <div class="step-number">4</div>
+            <span>Your Details</span>
+        </div>
+        <div class="step" id="step5">
+            <div class="step-number">5</div>
+            <span>Confirm</span>
+        </div>
+    </div>
+
+    <!-- Booking Form -->
+    <div class="booking-form">
+        <form id="bookingForm">
+            <!-- Step 1: Service Selection -->
+            <div class="form-section active" id="section1">
+                <h3>Select a Service</h3>
+                <div class="service-selection">
+                    {% for service in services %}
+                    <div class="service-option" data-service-id="{{ service.id }}" data-price="{{ service.price }}" data-duration="{{ service.duration }}">
+                        <h4>{{ service.name }}</h4>
+                        <p>{{ service.description }}</p>
+                        <div class="service-price">${{ "%.2f"|format(service.price) }}</div>
+                        <div class="service-duration">{{ service.duration }} minutes</div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Step 2: Date Selection -->
+            <div class="form-section" id="section2">
+                <h3>Select Date</h3>
+                <div class="calendar-container">
+                    <div class="calendar-header">
+                        <button type="button" class="calendar-nav" id="prevMonth">‹</button>
+                        <div class="calendar-month" id="currentMonth"></div>
+                        <button type="button" class="calendar-nav" id="nextMonth">›</button>
+                    </div>
+                    <div class="calendar-grid" id="calendarGrid"></div>
+                </div>
+            </div>
+
+            <!-- Step 3: Time Selection -->
+            <div class="form-section" id="section3">
+                <h3>Select Time</h3>
+                <div class="time-slots" id="timeSlots">
+                    <!-- Time slots will be populated dynamically -->
+                </div>
+            </div>
+
+            <!-- Step 4: Personal Details -->
+            <div class="form-section" id="section4">
+                <h3>Your Details</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="clientName">Full Name *</label>
+                        <input type="text" id="clientName" name="clientName" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="clientEmail">Email Address *</label>
+                        <input type="email" id="clientEmail" name="clientEmail" class="form-control" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="clientPhone">Phone Number *</label>
+                        <input type="tel" id="clientPhone" name="clientPhone" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="clientNotes">Additional Notes</label>
+                        <textarea id="clientNotes" name="clientNotes" class="form-control" rows="3"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 5: Confirmation -->
+            <div class="form-section" id="section5">
+                <h3>Confirm Your Booking</h3>
+                <div class="booking-summary" id="bookingSummary">
+                    <!-- Summary will be populated dynamically -->
+                </div>
+            </div>
+
+            <!-- Success Message -->
+            <div class="form-section" id="successSection">
+                <div class="success-message">
+                    <div class="checkmark">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <h3>Booking Confirmed!</h3>
+                    <p>Your appointment has been successfully booked. You will receive a confirmation notification shortly.</p>
+                    <a href="{{ url_for('index') }}" class="btn btn-primary">Back to Home</a>
+                </div>
+            </div>
+        </form>
+
+        <!-- Form Navigation -->
+        <div class="form-navigation">
+            <button type="button" class="btn btn-outline" id="prevBtn" onclick="previousStep()">Previous</button>
+            <button type="button" class="btn btn-primary" id="nextBtn" onclick="nextStep()">Next</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    let currentStep = 1;
+    let selectedService = null;
+    let selectedDate = null;
+    let selectedTime = null;
+    let currentMonth = new Date().getMonth();
+    let currentYear = new Date().getFullYear();
+
+    // Initialize booking process
+    document.addEventListener('DOMContentLoaded', function() {
+        updateStepDisplay();
+        initializeCalendar();
+        
+        // Pre-select service if passed in URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const serviceId = urlParams.get('service');
+        if (serviceId) {
+            selectService(serviceId);
+        }
+    });
+
+    // Service selection
+    document.querySelectorAll('.service-option').forEach(option => {
+        option.addEventListener('click', function() {
+            document.querySelectorAll('.service-option').forEach(opt => opt.classList.remove('selected'));
+            this.classList.add('selected');
+            selectedService = {
+                id: this.dataset.serviceId,
+                name: this.querySelector('h4').textContent,
+                price: this.dataset.price,
+                duration: this.dataset.duration
+            };
+        });
+    });
+
+    function selectService(serviceId) {
+        const serviceOption = document.querySelector(`[data-service-id="${serviceId}"]`);
+        if (serviceOption) {
+            serviceOption.click();
+        }
+    }
+
+    // Calendar functionality
+    function initializeCalendar() {
+        updateCalendar();
+        
+        document.getElementById('prevMonth').addEventListener('click', function() {
+            currentMonth--;
+            if (currentMonth < 0) {
+                currentMonth = 11;
+                currentYear--;
+            }
+            updateCalendar();
+        });
+        
+        document.getElementById('nextMonth').addEventListener('click', function() {
+            currentMonth++;
+            if (currentMonth > 11) {
+                currentMonth = 0;
+                currentYear++;
+            }
+            updateCalendar();
+        });
+    }
+
+    function updateCalendar() {
+        const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+            'July', 'August', 'September', 'October', 'November', 'December'];
+        
+        document.getElementById('currentMonth').textContent = `${monthNames[currentMonth]} ${currentYear}`;
+        
+        const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+        const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+        const today = new Date();
+        
+        const calendarGrid = document.getElementById('calendarGrid');
+        calendarGrid.innerHTML = '';
+        
+        // Day headers
+        const dayHeaders = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        dayHeaders.forEach(day => {
+            const dayHeader = document.createElement('div');
+            dayHeader.textContent = day;
+            dayHeader.style.fontWeight = 'bold';
+            dayHeader.style.textAlign = 'center';
+            dayHeader.style.padding = '0.5rem';
+            dayHeader.style.color = 'var(--dark-gray)';
+            calendarGrid.appendChild(dayHeader);
+        });
+        
+        // Empty cells for days before the first day of the month
+        for (let i = 0; i < firstDay; i++) {
+            const emptyDay = document.createElement('div');
+            emptyDay.classList.add('calendar-day', 'disabled');
+            calendarGrid.appendChild(emptyDay);
+        }
+        
+        // Days of the month
+        for (let day = 1; day <= daysInMonth; day++) {
+            const dayElement = document.createElement('div');
+            dayElement.classList.add('calendar-day');
+            dayElement.textContent = day;
+            
+            const dayDate = new Date(currentYear, currentMonth, day);
+            
+            // Disable past dates
+            if (dayDate < today.setHours(0, 0, 0, 0)) {
+                dayElement.classList.add('disabled');
+            } else {
+                dayElement.addEventListener('click', function() {
+                    if (!this.classList.contains('disabled')) {
+                        document.querySelectorAll('.calendar-day').forEach(d => d.classList.remove('selected'));
+                        this.classList.add('selected');
+                        selectedDate = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                        loadTimeSlots();
+                    }
+                });
+            }
+            
+            // Mark today
+            if (dayDate.toDateString() === today.toDateString()) {
+                dayElement.classList.add('today');
+            }
+            
+            calendarGrid.appendChild(dayElement);
+        }
+    }
+
+    // Load available time slots
+    function loadTimeSlots() {
+        if (!selectedService || !selectedDate) return;
+        
+        showLoading();
+        
+        fetch(`/api/available-slots?service_id=${selectedService.id}&date=${selectedDate}`)
+            .then(response => response.json())
+            .then(data => {
+                hideLoading();
+                const timeSlotsContainer = document.getElementById('timeSlots');
+                timeSlotsContainer.innerHTML = '';
+                
+                if (data.slots && data.slots.length > 0) {
+                    data.slots.forEach(slot => {
+                        const slotElement = document.createElement('div');
+                        slotElement.classList.add('time-slot');
+                        slotElement.textContent = slot.time;
+                        slotElement.dataset.datetime = slot.datetime;
+                        
+                        slotElement.addEventListener('click', function() {
+                            document.querySelectorAll('.time-slot').forEach(s => s.classList.remove('selected'));
+                            this.classList.add('selected');
+                            selectedTime = this.dataset.datetime;
+                        });
+                        
+                        timeSlotsContainer.appendChild(slotElement);
+                    });
+                } else {
+                    timeSlotsContainer.innerHTML = '<p>No available time slots for this date.</p>';
+                }
+            })
+            .catch(error => {
+                hideLoading();
+                console.error('Error loading time slots:', error);
+                alert('Error loading time slots. Please try again.');
+            });
+    }
+
+    // Step navigation
+    function nextStep() {
+        if (validateCurrentStep()) {
+            currentStep++;
+            if (currentStep > 5) {
+                submitBooking();
+                return;
+            }
+            updateStepDisplay();
+        }
+    }
+
+    function previousStep() {
+        if (currentStep > 1) {
+            currentStep--;
+            updateStepDisplay();
+        }
+    }
+
+    function updateStepDisplay() {
+        // Update step indicators
+        document.querySelectorAll('.step').forEach((step, index) => {
+            step.classList.toggle('active', index + 1 === currentStep);
+        });
+        
+        // Update form sections
+        document.querySelectorAll('.form-section').forEach((section, index) => {
+            section.classList.toggle('active', index + 1 === currentStep);
+        });
+        
+        // Update navigation buttons
+        document.getElementById('prevBtn').style.display = currentStep === 1 ? 'none' : 'inline-block';
+        document.getElementById('nextBtn').textContent = currentStep === 5 ? 'Confirm Booking' : 'Next';
+        
+        // Update booking summary
+        if (currentStep === 5) {
+            updateBookingSummary();
+        }
+    }
+
+    function validateCurrentStep() {
+        switch (currentStep) {
+            case 1:
+                if (!selectedService) {
+                    alert('Please select a service.');
+                    return false;
+                }
+                break;
+            case 2:
+                if (!selectedDate) {
+                    alert('Please select a date.');
+                    return false;
+                }
+                break;
+            case 3:
+                if (!selectedTime) {
+                    alert('Please select a time.');
+                    return false;
+                }
+                break;
+            case 4:
+                const requiredFields = ['clientName', 'clientEmail', 'clientPhone'];
+                for (const field of requiredFields) {
+                    const input = document.getElementById(field);
+                    if (!input.value.trim()) {
+                        alert(`Please fill in the ${field.replace('client', '').toLowerCase()} field.`);
+                        input.focus();
+                        return false;
+                    }
+                }
+                break;
+        }
+        return true;
+    }
+
+    function updateBookingSummary() {
+        const summary = document.getElementById('bookingSummary');
+        const appointmentDate = new Date(selectedTime);
+        
+        summary.innerHTML = `
+            <div class="summary-item">
+                <span>Service:</span>
+                <span>${selectedService.name}</span>
+            </div>
+            <div class="summary-item">
+                <span>Date:</span>
+                <span>${appointmentDate.toLocaleDateString()}</span>
+            </div>
+            <div class="summary-item">
+                <span>Time:</span>
+                <span>${appointmentDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+            </div>
+            <div class="summary-item">
+                <span>Duration:</span>
+                <span>${selectedService.duration} minutes</span>
+            </div>
+            <div class="summary-item">
+                <span>Client:</span>
+                <span>${document.getElementById('clientName').value}</span>
+            </div>
+            <div class="summary-item">
+                <span>Email:</span>
+                <span>${document.getElementById('clientEmail').value}</span>
+            </div>
+            <div class="summary-item">
+                <span>Phone:</span>
+                <span>${document.getElementById('clientPhone').value}</span>
+            </div>
+            <div class="summary-item">
+                <span>Total Price:</span>
+                <span>$${selectedService.price}</span>
+            </div>
+        `;
+    }
+
+    function submitBooking() {
+        showLoading();
+        
+        const bookingData = {
+            service_id: selectedService.id,
+            appointment_date: selectedTime,
+            client_name: document.getElementById('clientName').value,
+            client_email: document.getElementById('clientEmail').value,
+            client_phone: document.getElementById('clientPhone').value,
+            notes: document.getElementById('clientNotes').value
+        };
+        
+        fetch('/api/bookings', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(bookingData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            hideLoading();
+            if (data.booking_id) {
+                // Show success message
+                document.querySelectorAll('.form-section').forEach(section => {
+                    section.classList.remove('active');
+                });
+                document.getElementById('successSection').classList.add('active');
+                document.querySelector('.form-navigation').style.display = 'none';
+                document.querySelectorAll('.step').forEach(step => step.style.display = 'none');
+            } else {
+                alert('Error creating booking: ' + (data.error || 'Unknown error'));
+            }
+        })
+        .catch(error => {
+            hideLoading();
+            console.error('Error submitting booking:', error);
+            alert('Error submitting booking. Please try again.');
+        });
+    }
+</script>
+{% endblock %}
