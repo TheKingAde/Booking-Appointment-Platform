@@ -16,8 +16,8 @@ db = SQLAlchemy(app)
 
 # Telegram Bot Configuration
 TG_API_URL = "https://api.telegram.org"
-BOT_TOKEN = "7969763015:AAEliO2m1l9Yn7dDY8j_PKvG3_4yHlXbuZY"
-CHAT_ID = "6126141848"
+BOT_TOKEN = "YOUR TELEGRAM BOT TOKEN"
+CHAT_ID = "TELEGRAM CHANNEL, GROUP OR PERSONAL CHAT ID"
 
 # Database Models
 class Service(db.Model):
